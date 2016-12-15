@@ -1,0 +1,22 @@
+Metadata-Version: 1.1
+Name: mailchimp3
+Version: 2.03
+Summary: Modified mailchimp3
+Home-page: https://github.com/ellimac54/fixedmailchimp3
+Author: Test
+Author-email: test@gmail.com
+License: BSD
+Description: Test
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Developers
+Classifier: Natural Language :: English
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 2.6
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.1
+Classifier: Programming Language :: Python :: 3.2
+Classifier: Programming Language :: Python :: 3.3
