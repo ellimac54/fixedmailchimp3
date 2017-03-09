@@ -9,7 +9,7 @@ with open('README.rst') as readme:
 
 setup(
     name='mailchimp3',
-    version='2.0.3',
+    version='2.0.8',
     author='test',
     author_email='test@gmail.com',
     packages=find_packages(),
