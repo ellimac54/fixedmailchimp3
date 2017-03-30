@@ -6,6 +6,7 @@ Documentation: http://developer.mailchimp.com/documentation/mailchimp/
 """
 from __future__ import unicode_literals
 import functools
+import codecs
 
 import requests
 from requests.auth import HTTPBasicAuth
@@ -30,7 +31,7 @@ class MailChimpClient(object):
     """
     MailChimp class to communicate with the v3 API
     """
-    def __init__(self, mc_user, mc_secret, enabled=True):
+    def __init__(self, mc_user, mc_secret, enabled=True, logpath=None):
         """
         Initialize the class with you user_id and secret_key.
 
@@ -45,10 +46,38 @@ class MailChimpClient(object):
         :type enabled: :py:class:`bool`
         """
         super(MailChimpClient, self).__init__()
+        logfile = None
+        if logpath:
+            try:
+                logfile = codecs.open(logpath, "w", "utf-8")
+            except:
+                pass
+        self.logfile = logfile
         self.enabled = enabled
         self.auth = HTTPBasicAuth(mc_user, mc_secret)
         datacenter = mc_secret.split('-').pop()
         self.base_url = 'https://{0}.api.mailchimp.com/3.0/'.format(datacenter)
+
+
+    def do_request(self, reqtype, url, *args, **kwargs):
+        req = requests.Request(reqtype, url, *args, **kwargs)
+        prereq = req.prepare()
+        if self.logfile:
+            self.logfile.write(
+                '{}\n{}\n{}\n\nBody:\n{}\n----END------\n\n'.format(
+                '-----------START REQUEST---------',
+                prereq.method + ' ' + prereq.url,
+                '\n'.join('{}: {}'.format(k, v) for k, v in prereq.headers.items()),
+                prereq.body))
+        s = requests.Session()
+        response = s.send(prereq)
+        if self.logfile:
+            self.logfile.write(
+                '{}\nStatus: {}\nData: {}\n----END------\n\n'.format(
+                '-----------START RESPONSE---------',
+                response.status_code, response.text))
+        return response
+
 
 
     @_enabled_or_noop
@@ -64,7 +93,7 @@ class MailChimpClient(object):
         """
         url = urljoin(self.base_url, url)
         try:
-            r = requests.post(url, auth=self.auth, json=data)
+            r = self.do_request('POST', url, auth=self.auth, json=data)
         except requests.exceptions.RequestException as e:
             raise e
         else:
@@ -88,7 +117,7 @@ class MailChimpClient(object):
         if len(queryparams):
             url += '?' + urlencode(queryparams)
         try:
-            r = requests.get(url, auth=self.auth)
+            r = self.do_request('GET', url, auth=self.auth)
         except requests.exceptions.RequestException as e:
             raise e
         else:
@@ -107,7 +136,7 @@ class MailChimpClient(object):
         """
         url = urljoin(self.base_url, url)
         try:
-            r = requests.delete(url, auth=self.auth)
+            r = self.do_request('DELETE', url, auth=self.auth)
         except requests.exceptions.RequestException as e:
             raise e
         else:
@@ -130,7 +159,7 @@ class MailChimpClient(object):
         """
         url = urljoin(self.base_url, url)
         try:
-            r = requests.patch(url, auth=self.auth, json=data)
+            r = self.do_request('PATCH', url, auth=self.auth, json=data)
         except requests.exceptions.RequestException as e:
             raise e
         else:
@@ -151,7 +180,7 @@ class MailChimpClient(object):
         """
         url = urljoin(self.base_url, url)
         try:
-            r = requests.put(url, auth=self.auth, json=data)
+            r = self.do_request('PUT', url, auth=self.auth, json=data)
         except requests.exceptions.RequestException as e:
             raise e
         else:
