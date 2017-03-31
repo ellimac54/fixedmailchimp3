@@ -73,9 +73,11 @@ class MailChimpClient(object):
         response = s.send(prereq)
         if self.logfile:
             self.logfile.write(
-                '{}\nStatus: {}\nData: {}\n----END------\n\n'.format(
+                '{}\nStatus: {}\nHeaders:\n{}\nData: {}\n----END------\n\n'.format(
                 '-----------START RESPONSE---------',
-                response.status_code, response.text))
+                response.status_code,
+                '\n'.join('{}: {}'.format(k, v) for k, v in response.headers.items()),
+                response.text))
         return response
 
 
