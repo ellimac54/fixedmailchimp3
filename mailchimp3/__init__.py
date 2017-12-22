@@ -65,6 +65,7 @@ from mailchimp3.entities.reports import Reports
 from mailchimp3.entities.reportcampaignabusereports import ReportCampaignAbuseReports
 from mailchimp3.entities.reportcampaignadvice import ReportCampaignAdvice
 from mailchimp3.entities.reportclickdetailreports import ReportClickDetailReports
+from mailchimp3.entities.reportopendetailreports import ReportOpenDetailReports
 from mailchimp3.entities.reportclickdetailmembers import ReportClickDetailMembers
 from mailchimp3.entities.reportdomainperformance import ReportDomainPerformance
 from mailchimp3.entities.reporteepurl import ReportEepURL
@@ -154,6 +155,7 @@ class MailChimp(MailChimpClient):
         self.reports.advice = ReportCampaignAdvice(self)
         self.reports.click_details = ReportClickDetailReports(self)
         self.reports.click_details.members = ReportClickDetailMembers(self)
+        self.reports.open_details = ReportOpenDetailReports(self)
         self.reports.domain_performance = ReportDomainPerformance(self)
         self.reports.eepurl = ReportEepURL(self)
         self.reports.email_activity = ReportEmailActivity(self)
